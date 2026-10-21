@@ -164,6 +164,7 @@ Analyzed autocorrelation patterns using:
 plot_acf()
 plot_pacf()
 ```
+![]("./pacf.png")
 
 ### 6. Forecast Modeling
 
