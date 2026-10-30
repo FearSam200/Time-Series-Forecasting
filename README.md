@@ -68,8 +68,8 @@ A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up 
 
 ## 📈 Results & Visualizations
 ![](./Pacf.png)
-### Baseline vs. Actual Sales
-![](./BaselineForecastsvsActualSales.png)
+### Additive Decomposition
+![](./Additive Decomposition.png)
 
 ### Final Six-Week Forecast Matrix Sample
 ```python
