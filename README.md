@@ -69,8 +69,8 @@ A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up 
 
 ## 📈 Results & Visualizations
 ![](./Pacf.png)
-![Screenshots](./BaselineForecastsvsActualSales.png)
-<img width="620" height="329" alt="BaselineForecastsvsActualSales" src="https://github.com/user-attachments/assets/0d9f429d-f8cc-457e-9838-3f2a541137d5" />
+![img](./BaselineForecastsvsActualSales.png)
+<img alt="BaselineForecastsvsActualSales" src="https://github.com/user-attachments/assets/0d9f429d-f8cc-457e-9838-3f2a541137d5" />
 ### Final Six-Week Forecast Matrix Sample
 ```python
             Forecasted Sales  Lower CI (95%)  Upper CI (95%)
