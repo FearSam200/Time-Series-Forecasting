@@ -1,340 +1,82 @@
-# Rossmann Store Sales Forecasting
+# 🏪 Rossmann Store Sales Time Series Forecasting
 
-## Project Overview
-
-This project focuses on developing a time series forecasting solution for Rossmann retail stores using historical sales data. The objective is to analyze sales patterns, identify seasonality and trends, and build an accurate forecasting model capable of predicting future sales performance.
-
-The project demonstrates key Data Science competencies including:
-
-- Data Cleaning and Preprocessing
-- Exploratory Data Analysis (EDA)
-- Feature Engineering
-- Statistical Testing
-- Time Series Analysis
-- Forecast Modeling
-- Model Evaluation
-- Business-Oriented Data Interpretation
+A complete end-to-end time series analysis and forecasting pipeline built in Python to predict daily sales for individual retail stores using historical Rossmann store data. This project implements data cleansing, time series decomposition, baseline benchmarking, stationarity testing, and advanced modeling via **SARIMAX**.
 
 ---
 
-## Business Problem
+## 🚀 Project Overview
 
-Accurate sales forecasting is critical for retail businesses to optimize inventory management, staffing, marketing strategies, and revenue planning.
-
-Rossmann stores generate large volumes of daily transaction data. This project leverages historical sales records to develop a forecasting framework capable of predicting future store sales and supporting data-driven business decision making.
-
----
-
-## Dataset Description
-
-The dataset contains over **1 million retail sales records** collected from Rossmann stores.
-
-### Features
-
-| Feature | Description |
-|----------|-------------|
-| Store | Unique store identifier |
-| DayOfWeek | Day of the week |
-| Date | Transaction date |
-| Sales | Daily sales revenue |
-| Customers | Number of customers |
-| Open | Store open status |
-| Promo | Promotion indicator |
-| StateHoliday | State holiday indicator |
-| SchoolHoliday | School holiday indicator |
-
-### Dataset Statistics
-
-- Records: 1,017,209+
-- Features: 9
-- Time Granularity: Daily
-- Domain: Retail Analytics
+Accurate retail sales forecasting is critical for optimizing inventory, scheduling staff, and planning marketing campaigns. This project focuses on **Store #1** from the Rossmann dataset, transforming raw transactional records into a rigorous predictive pipeline:
+1. **Data Preprocessing & Hygiene**: Handling closed days, establishing continuous daily frequency grids, and resolving missing timeline gaps.
+2. **Exploratory Data Analysis & Decomposition**: Visualizing sales trends and isolating weekly (7-day) and annual (365-day) seasonality.
+3. **Baseline Benchmarking**: Establishing baseline performance metrics using Naive, Seasonal Naive, Moving Average, and Drift models.
+4. **Stationarity & Feature Identification**: Running Augmented Dickey-Fuller (ADF) tests, differencing, and utilizing ACF/PACF diagnostic plots.
+5. **Advanced Modeling (SARIMAX)**: Fitting a Seasonal Autoregressive Integrated Moving Average model, evaluating test holdout performance, inspecting residuals, and generating future forecasts with confidence intervals.
 
 ---
 
-## Project Objectives
+## 📊 Methodology & Key Steps
 
-- Analyze historical sales patterns.
-- Identify trends and seasonal behavior.
-- Evaluate the impact of promotions and holidays on sales.
-- Build a robust forecasting model for future sales prediction.
-- Generate actionable business insights from retail data.
+### Step 1: Data Preparation & Cleaning
+* **Store Filtering**: Isolated data specifically for **Store 1**.
+* **Handling Closed Days**: Sales on days the store was closed (`Open == 0`) were explicitly mapped to `0`.
+* **Frequency Enforcement**: Enforced a strict daily sequence (`asfreq('D')`) and filled missing timeline entries to guarantee uninterrupted temporal structure.
+
+### Step 2: Time Series Decomposition
+An **additive decomposition model** was applied to capture cyclic patterns:
+* **Weekly Pattern**: Highlighted strong intra-week fluctuations, with Sunday consistently representing zero/closed sales and high activity early in the week.
+* **Annual Seasonality**: Mapped day-of-year effects to reveal long-term yearly behavioral trends.
+
+### Step 3: Baseline Evaluation (6-Week Holdout)
+The final 42 days (6 weeks) were held out as a test set to evaluate baseline strategies:
+* **Naive Forecast**: Uses the last observed value.
+* **Seasonal Naive**: Uses values from exactly one seasonal cycle prior.
+* **Moving Average (14-day)**: Smooths out volatility using a rolling window.
+* **Drift Forecast**: Extrapolates historical linear trends.
+
+| Baseline Model | MAE | RMSE |
+| :--- | :--- | :--- |
+| **Naive** | 1,150.57 | 1,734.59 |
+| **Seasonal Naive** | **721.81** | **1,268.10** |
+| **Moving Average (14d)** | 1,223.39 | 1,684.42 |
+| **Drift** | 1,136.07 | 1,754.76 |
+
+> *Insight*: Seasonal Naive heavily outperforms standard naive models, proving the dominance of weekly seasonality in retail foot traffic.
+
+### Step 4: Stationarity & Order Identification
+* **ADF Test**: Confirmed stationarity parameters on differenced series ($p < 0.01$).
+* **ACF & PACF Diagnostics**: Inspected autocorrelation and partial autocorrelation charts to determine optimal AR ($p$), MA ($q$), and differencing ($d$) orders.
+
+### Step 5: Final SARIMAX Model & Evaluation
+A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up to June 2015 and evaluated against the 6-week test window.
+
+* **Model Performance Metrics**:
+  * **MAE**: $605.87$ (A significant improvement over baseline models)
+  * **RMSE**: $723.69$
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack & Libraries
 
-### Programming Language
-- Python
-
-### Data Analysis
-- Pandas
-- NumPy
-
-### Data Visualization
-- Matplotlib
-- Seaborn
-
-### Statistical Analysis
-- StatsModels
-
-### Machine Learning Utilities
-- Scikit-Learn
-
-### Forecasting Techniques
-- SARIMAX
-- Seasonal Decomposition
-- ADF Stationarity Test
-- ACF/PACF Analysis
+* **Language**: Python 
+* **Data Manipulation**: `pandas`, `numpy`
+* **Visualization**: `matplotlib`, `seaborn`
+* **Time Series & Modeling**: `statsmodels` (`seasonal_decompose`, `adfuller`, `plot_acf`, `plot_pacf`, `SARIMAX`)
+* **Metrics**: `scikit-learn` (`mean_absolute_error`, `root_mean_squared_error`, `mean_absolute_percentage_error`)
 
 ---
 
-## Project Workflow
+## 📈 Results & Visualizations
 
-### 1. Data Loading
+### Baseline vs. Actual Sales
+![Baseline Forecasts](https://via.placeholder.com/800x400?text=Baseline+Forecasts+vs+Actual+Sales) *(Placeholder or insert image link if hosted)*
 
-Imported the Rossmann sales dataset and performed an initial inspection of the data structure.
-
+### Final Six-Week Forecast Matrix Sample
 ```python
-import pandas as pd
-
-df = pd.read_csv("Rossman_store.csv")
-```
-
-### 2. Data Cleaning
-
-Performed quality checks to ensure data integrity:
-
-- Checked dataset dimensions
-- Verified datatypes
-- Detected missing values
-- Checked duplicate records
-- Validated date consistency
-
-### 3. DateTime Processing
-
-Converted the Date column into a proper datetime format to facilitate time series analysis.
-
-```python
-df["Date"] = pd.to_datetime(df["Date"])
-```
-
-### 4. Exploratory Data Analysis (EDA)
-
-Conducted exploratory analysis to understand:
-
-- Sales distribution
-- Customer behavior
-- Seasonal effects
-- Promotional impacts
-- Holiday influence on store performance
-
-Visualization techniques included:
-
-- Line Charts
-- Histograms
-- Correlation Analysis
-- Time Series Plots
-
-### 5. Time Series Analysis
-
-#### Trend Analysis
-Identified long-term movement in sales performance.
-
-#### Seasonality Analysis
-Used seasonal decomposition techniques to uncover recurring sales patterns.
-
-```python
-from statsmodels.tsa.seasonal import seasonal_decompose
-```
-
-#### Stationarity Testing
-
-Verified time series stationarity using the Augmented Dickey-Fuller (ADF) test.
-
-```python
-from statsmodels.tsa.stattools import adfuller
-```
-
-#### Correlation Analysis
-
-Analyzed autocorrelation patterns using:
-
-```python
-plot_acf()
-plot_pacf()
-```
-![](./Pacf.png)
-
-### 6. Forecast Modeling
-
-Built a forecasting model using SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous Variables).
-
-```python
-from statsmodels.tsa.statespace.sarimax import SARIMAX
-```
-
-The model was selected because it effectively captures:
-
-- Trend
-- Seasonality
-- Temporal dependencies
-- External business factors
-
----
-
-## Model Evaluation
-
-Model performance was measured using industry-standard metrics.
-
-### Mean Absolute Error (MAE)
-
-```python
-from sklearn.metrics import mean_absolute_error
-```
-
-### Root Mean Squared Error (RMSE)
-
-```python
-from sklearn.metrics import root_mean_squared_error
-```
-
-### Mean Absolute Percentage Error (MAPE)
-
-```python
-from sklearn.metrics import mean_absolute_percentage_error
-```
-
-These metrics provide insight into model accuracy and forecasting reliability.
-
----
-
-## Key Data Science Skills Demonstrated
-
-### Data Preparation
-
-- Data Cleaning
-- Missing Value Analysis
-- Data Validation
-- Data Transformation
-
-### Exploratory Analysis
-
-- Statistical Analysis
-- Data Visualization
-- Trend Analysis
-- Seasonal Analysis
-
-### Machine Learning & Forecasting
-
-- Time Series Forecasting
-- SARIMAX Modeling
-- Feature Engineering
-- Model Selection
-- Performance Evaluation
-
-### Business Analytics
-
-- Retail Analytics
-- Sales Forecasting
-- Revenue Prediction
-- Decision Support Analytics
-
----
-
-## Results & Insights
-
-Key findings from the analysis include:
-
-- Strong seasonal sales patterns exist within the retail business.
-- Store promotions significantly influence sales performance.
-- Holiday periods impact customer traffic and revenue generation.
-- Time series forecasting models can support proactive business planning and inventory optimization.
-
----
-
-## Business Impact
-
-This forecasting solution can help retail organizations:
-
-- Improve inventory management
-- Reduce stock shortages and overstocking
-- Optimize workforce scheduling
-- Improve promotional planning
-- Support revenue forecasting
-- Enable data-driven strategic decisions
-
----
-
-## Future Improvements
-
-Potential enhancements include:
-
-- Store-level forecasting across all locations
-- External economic factor integration
-- Machine Learning forecasting models (XGBoost, LightGBM)
-- Deep Learning approaches (LSTM, GRU)
-- Automated forecasting dashboards using Power BI or Tableau
-
----
-
-## Repository Structure
-
-```text
-Rossmann-Sales-Forecasting/
-│
-├── data/
-│   └── Rossman_store.csv
-│
-├── notebooks/
-│   └── Rossmann_Forecasting.ipynb
-│
-├── images/
-│   └── visualizations
-│
-├── README.md
-│
-└── requirements.txt
-```
-
----
-
-## Key Takeaways
-
-- Processed and analyzed over 1 million retail transaction records.
-- Built an end-to-end time series forecasting pipeline.
-- Applied statistical methods for forecasting validation.
-- Developed forecasting models using SARIMAX.
-- Evaluated model performance using MAE, RMSE, and MAPE.
-- Generated actionable business insights from retail sales data.
-
----
-
-## About Me
-
-**Samsondeen Kazeem**
-
-Data Scientist | Data Analyst | Machine Learning Enthusiast
-
-### Core Skills
-
-- Python
-- SQL
-- Pandas
-- NumPy
-- Scikit-Learn
-- Statistics
-- Time Series Forecasting
-- Data Visualization
-- Machine Learning
-- Business Analytics
-
-### Connect With Me
-
-- LinkedIn: [Your LinkedIn URL]
-- GitHub: [Your GitHub URL]
-- Portfolio: [Your Portfolio URL]
-
----
-
-⭐ If you found this project useful, feel free to star the repository and connect with me for Data Science opportunities.
+            Forecasted Sales  Lower CI (95%)  Upper CI (95%)
+Date                                                        
+2015-06-20           4696.45         2433.77         6959.14
+2015-06-21           -284.77        -2606.27         2036.73
+2015-06-22           4538.33         2207.98         6868.67
+2015-06-23           4334.14         1999.26         6669.03
+2015-06-24           4167.33         1828.54         6506.11
