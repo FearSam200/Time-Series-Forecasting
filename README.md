@@ -65,8 +65,6 @@ A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up 
 * **Metrics**: `scikit-learn` (`mean_absolute_error`, `root_mean_squared_error`, `mean_absolute_percentage_error`)
 
 ---
-### Additive Decomposition
-![](./Additive Decomposition.png)
 
 ## 📈 Results & Visualizations
 ![](./Pacf.png)
