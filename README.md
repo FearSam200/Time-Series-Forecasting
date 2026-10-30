@@ -69,6 +69,7 @@ A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up 
 ## 📈 Results & Visualizations
 ![](./Pacf.png)
 ### Baseline vs. Actual Sales
+![](./Baseline Forecasts vs Actual Sales.png)
 ![Baseline Forecasts vs Actual Sales](https://via.placeholder.com/800x400?text=Baseline+Forecasts+vs+Actual+Sales) 
 
 ### Final Six-Week Forecast Matrix Sample
