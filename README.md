@@ -1,3 +1,4 @@
+
 # 🏪 Rossmann Store Sales Time Series Forecasting
 
 A complete end-to-end time series analysis and forecasting pipeline built in Python to predict daily sales for individual retail stores using historical Rossmann store data. This project implements data cleansing, time series decomposition, baseline benchmarking, stationarity testing, and advanced modeling via **SARIMAX**.
@@ -68,7 +69,7 @@ A **$SARIMAX(1,1,1) \times (1,1,1)_7$** model was trained on historical data up 
 
 ## 📈 Results & Visualizations
 ![](./Pacf.png)
-
+<img width="620" height="329" alt="BaselineForecastsvsActualSales" src="https://github.com/user-attachments/assets/0d9f429d-f8cc-457e-9838-3f2a541137d5" />
 ### Final Six-Week Forecast Matrix Sample
 ```python
             Forecasted Sales  Lower CI (95%)  Upper CI (95%)
